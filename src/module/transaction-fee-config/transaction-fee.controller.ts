@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { TransactionFeeService } from './transaction-fee.service';
 
 @ApiTags("transaction-fee")
-@Controller("v1/transaction-fee")
+@Controller("")
 export class TransactionFeeController {
   /**
    *
@@ -24,10 +24,12 @@ export class TransactionFeeController {
   }
 
   @Post("compute-transaction-fee")
-  async computeTransactionFee(@Body() transactionPayload: TransactionPayloadDto) {
+  async computeTransactionFee(
+    @Body() transactionPayload: TransactionPayloadDto
+  ) {
     const result = await this.transactionFeeService.computeFee(
       transactionPayload
     );
-   return result;
+    return result;
   }
 }
