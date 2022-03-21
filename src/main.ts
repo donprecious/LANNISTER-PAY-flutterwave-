@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({ origin: "*" });
-  app.setGlobalPrefix("api");
+  app.setGlobalPrefix("");
   const options = new DocumentBuilder()
     .setTitle("flutterwave test project ")
     .setDescription("")
