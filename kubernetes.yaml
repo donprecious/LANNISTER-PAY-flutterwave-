@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rckg-core-be
+  namespace: {{namespace}}
+  labels:
+    app: rckg-core-be
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-algorithm: "least_connections"
+
+spec:
+  selector:
+    app: rckg-core-be
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: 3000
+      name: http
+  type: ClusterIP
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rckg-core-be
+  namespace: {{namespace}}
+  labels:
+    app: rckg-core-be
+spec:
+  replicas: {{replicas}}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: rckg-core-be
+  template:
+    metadata:
+      labels:
+        app: rckg-core-be
+    spec:
+      imagePullSecrets:
+        - name: docker
+      containers:
+        - name: rckg-core-be
+          image: {{image}}
+          imagePullPolicy: Always
+          envFrom:
+          - secretRef:
+              name: coredatabase
+          - secretRef:
+              name: coretypeform
+          ports:
+          - containerPort: 3000
+            protocol: TCP
